@@ -24,7 +24,6 @@ public class AddTowNumber {
 
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode result = new ListNode();
-        // revert l1, l2 into a list
         ListNode nextValue1 = l1.next;
         ListNode nextValue2 = l2.next;
         int value1 = l1.val;
@@ -55,12 +54,14 @@ public class AddTowNumber {
         for (int i = charValue2.length - 1; i >= 0; i--) {
             revertValue2 += charValue2[i];
         }
-        System.out.println(Integer.valueOf(revertValue1));
-        System.out.println(Integer.valueOf(revertValue2));
         int total = Integer.valueOf(revertValue1) + Integer.valueOf(revertValue2);
-        System.out.println(total);
+        boolean flag = false;
         for (char c : String.valueOf(total).toCharArray()) {
-            result.val = Integer.valueOf(c);
+            result.val = Integer.valueOf(String.valueOf(c));
+            if (flag) {
+                result.next = new ListNode(Integer.valueOf(c));
+            }
+            flag = true;
         }
         return result;
     }

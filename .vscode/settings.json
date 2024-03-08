@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\dangh\\Downloads\\poi-5.2.3.jar",
+        "c:\\Users\\dangh\\Downloads\\poi-ooxml-3.9.jar",
+        "c:\\Users\\dangh\\Downloads\\poi-3.7.jar"
+    ]
+}
