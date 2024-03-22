@@ -1,12 +1,8 @@
 package code;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 public class TheLongestString {
     public static void main(String[] argv) {
-        System.out.println(lengthOfLongestSubstring("aanviaj"));
+        System.out.println(lengthOfLongestSubstring("anviaj"));
     }
 
     public static int lengthOfLongestSubstring(String s) {
@@ -23,20 +19,15 @@ public class TheLongestString {
         boolean addValue1 = true;
         for (int i = 0; i < array.length; i++) {
             int indexOfExist1 = value1.indexOf(String.valueOf(array[i]));
-            if (indexOfExist1 > -1) {
-                value2 = new StringBuilder(value1.subSequence(indexOfExist1 + 1, i));
+            if (indexOfExist1 > -1 && addValue1) {
+                value2 = new StringBuilder(value1.subSequence(indexOfExist1 + 1, value1.length()));
                 addValue1 = false;
             }
-            if (value1.length() < value2.length()) {
-                value1 = new StringBuilder();
-            }
             int indexOfExist2 = value2.indexOf(String.valueOf(array[i]));
-            if (indexOfExist2 > -1) {
-                value2 = new StringBuilder(value2.subSequence(indexOfExist2 + 1, i));
+            if (indexOfExist2 > -1 && !addValue1) {
+                value1 = new StringBuilder(value2.subSequence(indexOfExist2 + 1, value2.length()));
                 addValue1 = true;
-            }
-            if (value1.length() < value2.length()) {
-                value1 = new StringBuilder();
+
             }
             if (addValue1) {
                 value1.append(array[i]);
@@ -44,9 +35,13 @@ public class TheLongestString {
             if (!addValue1) {
                 value2.append(array[i]);
             }
+            if(result<value1.length()){
+                result = value1.length();
+            }
+            if(result<value2.length()){
+                result = value2.length();
+            }
         }
-        result = value1.length() > value2.length() ? value1.length() : value2.length();
-
         return result;
     }
 }
