@@ -3,23 +3,16 @@ package code;
 public class AddTowNumber {
 
     public static void main(String[] argv) {
-        ListNode listNode1 = new ListNode(1);
-        ListNode listNode2 = new ListNode(2);
-        ListNode listNode3 = new ListNode(3);
-        ListNode listNode4 = new ListNode(4);
-        listNode1.next = listNode2;
-        listNode2.next = listNode3;
-        listNode3.next = listNode4;
-        ListNode listNode11 = new ListNode(4);
-        ListNode listNode12 = new ListNode(5);
-        ListNode listNode13 = new ListNode(6);
-        ListNode listNode14 = new ListNode(7);
-        ListNode listNode15 = new ListNode(8);
-        listNode11.next = listNode12;
-        listNode12.next = listNode13;
-        listNode13.next = listNode14;
-        listNode14.next = listNode15;
-        addTwoNumbers(listNode1, listNode11);
+        ListNode listNode1 = new ListNode();
+        ListNode listNode2 = new ListNode();
+        convertStringToListNode("9999999", listNode1);
+        convertStringToListNode("9999", listNode2);
+        ListNode result = addTwoNumbers(listNode1, listNode2);
+        while (result.next != null) {
+            System.out.println(result.val);
+            result = result.next;
+        }
+        System.out.println(result.val);
     }
 
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -44,26 +37,51 @@ public class AddTowNumber {
         if (nextValue2.next == null) {
             value2 = value2 * 10 + nextValue2.val;
         }
-        char[] charValue1 = String.valueOf(value1).toCharArray();
-        char[] charValue2 = String.valueOf(value2).toCharArray();
-        String revertValue1 = "";
-        String revertValue2 = "";
-        for (int i = charValue1.length - 1; i >= 0; i--) {
-            revertValue1 += charValue1[i];
-        }
-        for (int i = charValue2.length - 1; i >= 0; i--) {
-            revertValue2 += charValue2[i];
-        }
-        int total = Integer.valueOf(revertValue1) + Integer.valueOf(revertValue2);
-        boolean flag = false;
-        for (char c : String.valueOf(total).toCharArray()) {
-            result.val = Integer.valueOf(String.valueOf(c));
-            if (flag) {
-                result.next = new ListNode(Integer.valueOf(c));
-            }
-            flag = true;
+        value1 = revertNumber(value1);
+        value2 = revertNumber(value2);
+        int total = value1+value2;
+        revertNumberResult(total, result);
+        return result;
+    }
+
+    private static int revertNumber(int num){
+        int result = 0;
+        while (num!=0) {
+            int remain = num%10;
+            result = result*10 +remain;
+            num = num/10;
         }
         return result;
+    }
+    private static void revertNumberResult(int num, ListNode listNode){
+        boolean isFirstNode = true;
+        while (num!=0) {
+            int remain = num%10;
+            if(isFirstNode){
+                listNode.val = remain;
+                isFirstNode = false;
+            }
+            else{
+                listNode.next = new ListNode(remain);
+                listNode = listNode.next;
+            }
+            num = num/10;
+        }
+    }
+
+    private static void convertStringToListNode(String value,ListNode result){
+
+        boolean isFirstNode = true;
+        for (char c : value.toCharArray()) {
+            if(isFirstNode){
+                result.val = Integer.parseInt(String.valueOf(c));
+                isFirstNode = false;
+            }
+            else{
+                result.next = new ListNode(Integer.parseInt(String.valueOf(c)));
+                result = result.next;
+            }
+        }
     }
 
 }
