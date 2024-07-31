@@ -11,18 +11,24 @@ public class TestOfLove {
         }
         int maxIndexLogCanLand = segmentIndex(0, jumpLength, segment, "L");
         int maxIndexWaterCanLand = segmentIndex(0, swimLength, segment, "W");
-        if (maxIndexLogCanLand >= 0) {
-            for (int i = maxIndexLogCanLand; i < segment.length; i++) {
+        if (maxIndexLogCanLand >= 0 || maxIndexWaterCanLand >= 0) {
+            int start = maxIndexLogCanLand >= 0 ? maxIndexLogCanLand : maxIndexWaterCanLand;
+            for (int i = start; i < segment.length; i++) {
                 maxIndexLogCanLand = segmentIndex(i, jumpLength, segment, "L");
                 maxIndexWaterCanLand = segmentIndex(i, swimLength, segment, "W");
+                if (segment[i].equals("L") && i + jumpLength >= segment.length
+                        || (segment[i].equals("W") && i + swimLength >= segment.length)) {
+                    return true;
+                }
+                if (segment[i].equals("W") && swimLength == 0) {
+                    return false;
+                }
                 if (maxIndexLogCanLand > 0) {
                     i = maxIndexLogCanLand;
-                    if (segment.length - i <= jumpLength) {
-                        return true;
-                    }
                 } else if (maxIndexWaterCanLand > 0 && maxIndexLogCanLand < 0) {
                     i = maxIndexWaterCanLand;
-                    if (segment[i + 1].equals("C") || (segment[i + 1].equals("W") && swimLength == 0)) {
+                    if (i + 1 < segment.length
+                            && (segment[i + 1].equals("C") || (segment[i + 1].equals("W") && swimLength == 0))) {
                         return false;
                     }
                     swimLength--;
@@ -40,15 +46,15 @@ public class TestOfLove {
             }
             if (segment[i].equals(segmentName)) {
                 result = i;
+                end--;
             }
-            end--;
         }
         return result;
     }
 
     public static void main(String[] args) {
-        int[] condition = { 6, 1, 1 };
-        String[] segment = { "L", "W", "L", "L", "W", "L" };
+        int[] condition = { 6, 6, 1 };
+        String[] segment = { "W", "C", "C", "C", "C", "W" };
         System.out.println(solution(condition, segment));
     }
 }
