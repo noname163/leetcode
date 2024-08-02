@@ -1,60 +1,104 @@
 package code;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class TestOfLove {
-    public static boolean solution(int[] condition, String[] segment) {
-        boolean result = false;
-        int riverLength = condition[0];
-        int jumpLength = condition[1];
-        int swimLength = condition[2];
-        if (jumpLength > riverLength || (jumpLength == riverLength && segment[riverLength - 1].equals("L"))) {
-            return true;
+    public static boolean solution(int[] condition, char[] segment) {
+        boolean result = true;
+        List<Integer> logs = new ArrayList<>();
+        int nextLog = 0;
+        int currentPosition = -1;
+        int numberOfJump = condition[1];
+        int numberOfSwim = condition[2];
+        for (int i = 0; i < segment.length; i++) {
+            if (segment[i] == 'L') {
+                logs.add(i);
+            }
         }
-        int maxIndexLogCanLand = segmentIndex(0, jumpLength, segment, "L");
-        int maxIndexWaterCanLand = segmentIndex(0, swimLength, segment, "W");
-        if (maxIndexLogCanLand >= 0 || maxIndexWaterCanLand >= 0) {
-            int start = maxIndexLogCanLand >= 0 ? maxIndexLogCanLand : maxIndexWaterCanLand;
-            for (int i = start; i < segment.length; i++) {
-                maxIndexLogCanLand = segmentIndex(i, jumpLength, segment, "L");
-                maxIndexWaterCanLand = segmentIndex(i, swimLength, segment, "W");
-                if (segment[i].equals("L") && i + jumpLength >= segment.length
-                        || (segment[i].equals("W") && i + swimLength >= segment.length)) {
+        logs.add(segment.length);
+        while (currentPosition < segment.length) {
+            if (numberOfJump >= logs.get(nextLog) - currentPosition) {
+                currentPosition = logs.get(nextLog);
+            } else {
+                currentPosition += numberOfJump;
+                if (currentPosition >= segment.length) {
                     return true;
-                }
-                if (segment[i].equals("W") && swimLength == 0) {
-                    return false;
-                }
-                if (maxIndexLogCanLand > 0) {
-                    i = maxIndexLogCanLand;
-                } else if (maxIndexWaterCanLand > 0 && maxIndexLogCanLand < 0) {
-                    i = maxIndexWaterCanLand;
-                    if (i + 1 < segment.length
-                            && (segment[i + 1].equals("C") || (segment[i + 1].equals("W") && swimLength == 0))) {
-                        return false;
+                } else {
+                    while (currentPosition < segment.length && currentPosition < logs.get(nextLog)) {
+                        if (segment[currentPosition] != 'C' && numberOfSwim > 0) {
+                            currentPosition++;
+                            numberOfSwim--;
+                        } else {
+                            return false;
+                        }
                     }
-                    swimLength--;
                 }
             }
+            nextLog++;
         }
         return result;
     }
 
-    private static int segmentIndex(int start, int end, String[] segment, String segmentName) {
-        int result = -1;
-        for (int i = start; i < segment.length; i++) {
-            if (end == 0) {
-                return result;
-            }
-            if (segment[i].equals(segmentName)) {
-                result = i;
-                end--;
-            }
+    public static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
         }
-        return result;
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
     }
 
     public static void main(String[] args) {
-        int[] condition = { 6, 6, 1 };
-        String[] segment = { "W", "C", "C", "C", "C", "W" };
-        System.out.println(solution(condition, segment));
+        MyScanner sc = new MyScanner();
+        int test = sc.nextInt();
+        while (test > 0) {
+            int[] condition = { sc.nextInt(), sc.nextInt(), sc.nextInt() };
+            char[] segment = sc.nextLine().toCharArray();
+            if (solution(condition, segment)) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+            test--;
+        }
     }
 }
