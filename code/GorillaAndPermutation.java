@@ -1,8 +1,10 @@
 package code;
 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 public class GorillaAndPermutation {
@@ -11,38 +13,41 @@ public class GorillaAndPermutation {
         for (int i = 1; i <= n; ++i) {
             result.add(i);
         }
-        // find large number that match the f(i)
-        int f = n;
-        for (Integer integer : result) {
-            if (integer > f && integer >= k) {
-                f = integer;
-            }
-        }
-        // find all posible number match g(i)
-        Set<Integer> gList = new HashSet<>();
-        for (Integer integer : result) {
-            if (integer >= m) {
-                gList.add(integer);
-            }
-        }
+
         List<Integer> resultFinal = new ArrayList<>();
-        resultFinal.add(f);
-        for (Integer integer : result) {
-            if (!gList.contains(integer)) {
-                resultFinal.add(integer);
+        Set<Integer> insertIndex = new HashSet<>();
+        for (int i = result.size() - 1; i >= 0; i--) {
+            if (result.get(i) >= k) {
+                resultFinal.add(result.get(i));
+                insertIndex.add(i);
             }
         }
-        for (Integer integer : gList) {
-            if (integer != f) {
-                resultFinal.add(integer);
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i) > m && !insertIndex.contains(i)) {
+                resultFinal.add(result.get(i));
+                insertIndex.add(i);
+            }
+        }
+        if (!result.isEmpty()) {
+            for (int i = 0; i < result.size(); i++) {
+                if (!insertIndex.contains(i)) {
+                    resultFinal.add(result.get(i));
+                }
             }
         }
         for (Integer integer : resultFinal) {
-            System.out.println(integer);
+            System.out.print(integer + " ");
         }
+        System.out.println("");
     }
 
     public static void main(String[] args) {
-        solution(5, 2, 5);
+        Scanner scanner = new Scanner(new InputStreamReader(System.in));
+        int test = scanner.nextInt();
+        while (test > 0) {
+            solution(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+            test--;
+        }
+
     }
 }
